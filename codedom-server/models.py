@@ -6,6 +6,10 @@ from sqlalchemy.sql.schema import Table
 
 from .database import Base
 
+users_repositories = Table("users_repositories", Base.metadata,
+                     Column("user_id", ForeignKey(
+                         "user.id"), primary_key=True),
+                     Column("repository_id", ForeignKey("repository.id"), primary_key=True))
 
 class User(Base):
     __tablename__ = "users"
@@ -17,7 +21,11 @@ class User(Base):
 
     tokens = Column(Integer, default=0, nullable=True)
 
-    repositories = relationship("Repository", back_populates="owner")
+    # related_repositories = relationship("Repository",
+    #                     secondary=users_repositories,
+    #                     back_populates="related_users")
+    related_repositories = relationship("Contributor", back_populates="user")
+                    
     commits = relationship("Commit", back_populates="author")
     issues = relationship("Issues", back_populates="issuer")
 
@@ -32,7 +40,11 @@ class Repository(Base):
     repository_size = Column(Float, default=0.0)
     downloads_number = Column(String)
 
-    contributors = relationship("Contributor", back_populates="repository")
+    # related_users = relationship("User",
+    #                     secondary=users_repositories,
+    #                     back_populates="related_repositories")
+    related_users = relationship("Contributor", back_populates="repository")
+
     commits = relationship("Commit", back_populates="repository")
     files = relationship("File", back_populates="repository")
     issues = relationship("Issue", back_populates="repository")
@@ -44,15 +56,22 @@ class Role(str, Enum):
     contributor = "contributor"
 
 
+# class Contributor(Base):
+#     __tablename__ = "contributors"
+
+#     id = Column(Integer, primary_key=True, index=True)
+#     user_id = Column(Integer, ForeignKey("users.id"), primary_key=True)
+#     repository_id = Column(Integer, ForeignKey("repositories.id"), primary_key=True)
+
+#     role = Role
+
 class Contributor(Base):
-    __tablename__ = "contributors"
-
-    id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey("users.id"), primary_key=True)
-    repository_id = Column(Integer, ForeignKey("repositories.id"), primary_key=True)
-
+    __tablename__ = 'contributors'
+    user_id = Column(Integer, ForeignKey('users.id'), primary_key=True)
+    repository_id = Column(Integer, ForeignKey('repositories.id'), primary_key=True)
     role = Role
-
+    repository = relationship("Repository", back_populates="related_users")
+    user = relationship("User", back_populates="related_repositories")
 
 class Commit(Base):
     __tablename__ = "commits"
@@ -61,8 +80,12 @@ class Commit(Base):
     message = Column(String)
     created_at = Column(String)
 
-    user_id = Column(Integer, ForeignKey("users.id"))
+    author_id = Column(Integer, ForeignKey("users.id"))
+    author = relationship("User", back_populates="commits")
+
     repository_id = Column(Integer, ForeignKey("repositories.id"))
+    repository = relationship("Repository", back_populates="commits")
+
     committed_files = relationship("File", back_populates="commit")
 
 
@@ -99,7 +122,11 @@ class File(Base):
     language = Language
 
     repository_id = Column(Integer, ForeignKey("repositories.id"))
+    repository = relationship("Repository", back_populates="files")
+
     commit_id = Column(Integer, ForeignKey("commits.id"))
+    commit = relationship("Commit", back_populates="committed_files")
+
     related_issues = relationship("Issue",
                             secondary=issues_files,
                             back_populates="related_files")
@@ -122,8 +149,12 @@ class Issue(Base):
     is_resolved = Column(Boolean, default=False)
     type = Type
 
-    user_id = Column(Integer, ForeignKey("users.id"))
+    issuer_id = Column(Integer, ForeignKey("users.id"))
+    issuer = relationship("User", back_populates="issues")
+
     repository_id = Column(Integer, ForeignKey("repositories.id"))
+    repository = relationship("Repository", back_populates="issues")
+
     related_files = relationship("Files",
                         secondary=issues_files,
                         back_populates="related_issues")
