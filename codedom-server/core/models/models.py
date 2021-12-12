@@ -6,10 +6,10 @@ from sqlalchemy.sql.schema import Table
 
 from .database import Base
 
-users_repositories = Table("users_repositories", Base.metadata,
-                     Column("user_id", ForeignKey(
-                         "user.id"), primary_key=True),
-                     Column("repository_id", ForeignKey("repository.id"), primary_key=True))
+# users_repositories = Table("users_repositories", Base.metadata,
+#                      Column("user_id", ForeignKey(
+#                          "user.id"), primary_key=True),
+#                      Column("repository_id", ForeignKey("repository.id"), primary_key=True))
 
 class User(Base):
     __tablename__ = "users"
@@ -19,7 +19,7 @@ class User(Base):
     hashed_password = Column(String)
     is_active = Column(Boolean, default=True)
 
-    tokens = Column(Integer, default=0, nullable=True)
+    total_tokens = Column(Integer, default=0, nullable=True)
 
     # related_repositories = relationship("Repository",
     #                     secondary=users_repositories,
@@ -27,7 +27,7 @@ class User(Base):
     related_repositories = relationship("Contributor", back_populates="user")
                     
     commits = relationship("Commit", back_populates="author")
-    issues = relationship("Issues", back_populates="issuer")
+    issues = relationship("Issue", back_populates="issuer")
 
 class Repository(Base):
     __tablename__ = "repositories"
@@ -67,6 +67,7 @@ class Role(str, Enum):
 
 class Contributor(Base):
     __tablename__ = 'contributors'
+    id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey('users.id'), primary_key=True)
     repository_id = Column(Integer, ForeignKey('repositories.id'), primary_key=True)
     role = Role
@@ -91,8 +92,8 @@ class Commit(Base):
 
 issues_files = Table("issues_files", Base.metadata,
                      Column("issue_id", ForeignKey(
-                         "issue.id"), primary_key=True),
-                     Column("file_id", ForeignKey("file.id"), primary_key=True))
+                         "issues.id"), primary_key=True),
+                     Column("file_id", ForeignKey("files.id"), primary_key=True))
 
 
 class Language(str, Enum):
