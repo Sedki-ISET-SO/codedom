@@ -2,25 +2,27 @@ package com.codedom.codedomserver.services.impl;
 
 import com.codedom.codedomserver.exceptions.FileException;
 import com.codedom.codedomserver.exceptions.FileResponse;
+import com.codedom.codedomserver.models.Commit;
 import com.codedom.codedomserver.models.File;
-import com.codedom.codedomserver.properties.FileProperties;
 import com.codedom.codedomserver.repositories.CommitRepository;
 import com.codedom.codedomserver.repositories.FileRepository;
+import com.codedom.codedomserver.repositories.RepositoryRepository;
+import com.codedom.codedomserver.services.CommitService;
 import com.codedom.codedomserver.services.FileService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.Resource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.util.FileSystemUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Objects;
-import java.util.stream.Stream;
+import java.util.*;
+import java.util.function.Function;
 
 @Service
 public class FileServiceImpl implements FileService {
@@ -31,38 +33,39 @@ public class FileServiceImpl implements FileService {
     @Autowired
     private CommitRepository commitRepository;
 
-    private final Path rootLocation;
+    @Autowired
+    private RepositoryRepository repositoryRepository;
 
-    public FileServiceImpl(FileProperties fileProperties) {
-        this.rootLocation = Paths.get(fileProperties.getLocation());    }
-
-    @Override
-    public void init() {
-        try {
-            Files.createDirectory(rootLocation);
-        } catch (IOException e) {
-            throw new FileException("Could not initialize file storage directory", e);
-        }
-    }
+    @Autowired
+    private CommitService commitService;
 
     public ResponseEntity<FileResponse> uploadFiles(MultipartFile[] files, Long commitId) {
         try {
+            String commitFootPrint = commitRepository
+                    .findById(commitId)
+                    .map((Function<Commit, Object>) Commit::getFootPrint)
+                    .toString()
+                    .replace("Optional", "")
+                    .replace("[", "")
+                    .replace("]", "");
+            Path commitFilesPath = Paths.get(String.format("%s", commitFootPrint));
+            Files.createDirectories(commitFilesPath);
+
             for (MultipartFile file : files) {
                 try {
                     Files.copy(file.getInputStream(),
-                            this.rootLocation.resolve(Objects.requireNonNull(file.getOriginalFilename())));
+                            commitFilesPath.resolve(Objects.requireNonNull(file.getOriginalFilename())));
                 } catch (IOException e) {
                     throw new FileException("Failed to store file " + file.getOriginalFilename(), e);
                 }
                 File fileEntity = new File();
                 fileEntity.setName(file.getOriginalFilename());
-                fileEntity.setPath(this.rootLocation.resolve(Objects.requireNonNull(file.getOriginalFilename())).toString());
+                fileEntity.setPath(commitFilesPath.resolve(Objects.requireNonNull(file.getOriginalFilename())).toString());
                 fileEntity.setSize(((float) file.getSize()));
                 fileEntity.setExtension(file.getContentType());
 
                 commitRepository.findById(commitId).map(commit -> {
                     fileEntity.setCommit(commit);
-
                     return fileRepository.save(fileEntity);
                 });
             }
@@ -75,22 +78,18 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public Stream<Path> getAllFilesPaths() {
-        return null;
+    public Optional<File> getFileById(Long fileId) {
+        return fileRepository.findById(fileId);
     }
 
     @Override
-    public Path loadFilePathByName(String filename) {
-        return null;
+    public Page<String> getFilesByCommitId(Long commitId, Pageable pageable) {
+        return fileRepository.findFilesPathsById(commitId, pageable);
     }
 
     @Override
-    public Resource loadAsResource(String filename) {
-        return null;
-    }
-
-    @Override
-    public void deleteAll() {
-        FileSystemUtils.deleteRecursively(rootLocation.toFile());
+    public Page<String> getFilesOfLastAddedCommit(Long repositoryId, Pageable pageable) {
+        Long commitId = commitService.findCommitIdByRepositoryId(repositoryId);
+        return fileRepository.findFilesPathsById(commitId, pageable);
     }
 }

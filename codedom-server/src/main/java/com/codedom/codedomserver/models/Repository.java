@@ -1,5 +1,6 @@
 package com.codedom.codedomserver.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -11,6 +12,7 @@ import java.util.Set;
 @Entity
 @Table
 @Data
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Repository extends AuditModel {
 
     @Id

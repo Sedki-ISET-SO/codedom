@@ -6,7 +6,9 @@ import com.codedom.codedomserver.repositories.RepositoryRepository;
 import com.codedom.codedomserver.services.CommitService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -35,5 +37,17 @@ public class CommitServiceImpl implements CommitService {
     @Override
     public Page<Commit> getAllCommits(Pageable pageable) {
         return commitRepository.findAll(pageable);
+    }
+
+    @Override
+    public Page<Commit> findByRepositoryId(Long repositoryId) {
+        Pageable firstPageWithTwoElements = PageRequest.of(0, 1);
+        return commitRepository.findByRepositoryId(repositoryId, firstPageWithTwoElements);
+    }
+
+    @Override
+    public Long findCommitIdByRepositoryId(Long repositoryId) {
+        Pageable firstPageWithTwoElements = PageRequest.of(0, 1, Sort.Direction.DESC, "createdAt");
+        return commitRepository.findByRepositoryId(repositoryId, firstPageWithTwoElements).getContent().get(0).getId();
     }
 }

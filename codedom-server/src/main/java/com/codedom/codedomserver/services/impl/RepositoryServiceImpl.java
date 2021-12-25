@@ -30,4 +30,12 @@ public class RepositoryServiceImpl implements RepositoryService {
     public Page<Repository> getAllRepositories(Pageable pageable) {
         return repositoryRepository.findAll(pageable);
     }
+
+    @Override
+    public Optional<Repository> updateRepositorySize(Long repositoryId, Repository repositoryRequest) {
+        return repositoryRepository.findById(repositoryId).map(repository -> {
+            repository.setRepositorySize(repositoryRequest.getRepositorySize());
+            return repositoryRepository.save(repository);
+        });
+    }
 }

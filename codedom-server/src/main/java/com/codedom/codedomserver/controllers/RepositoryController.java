@@ -29,7 +29,13 @@ public class RepositoryController {
     }
 
     @GetMapping("/repo/{repositoryId}")
-    public Optional<Repository> getRepositoryById(@PathVariable (value = "repositoryId") Long repositoryId) {
+    public Optional<Repository> getRepositoryById(@PathVariable(value = "repositoryId") Long repositoryId) {
         return repositoryService.getRepositoryById(repositoryId);
+    }
+
+    @PutMapping("/repo/{repositoryId}")
+    public Optional<Repository> updateRepositorySize(@PathVariable Long repositoryId,
+                                                     @Valid @RequestBody Repository repositoryRequest) {
+        return repositoryService.updateRepositorySize(repositoryId, repositoryRequest);
     }
 }

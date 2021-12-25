@@ -1,24 +1,21 @@
 package com.codedom.codedomserver.services;
 
-import java.nio.file.Path;
-import java.util.stream.Stream;
-
 import com.codedom.codedomserver.exceptions.FileResponse;
-import org.springframework.core.io.Resource;
+import com.codedom.codedomserver.models.File;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
-public interface FileService {
+import java.util.Optional;
 
-    void init();
+public interface FileService {
 
     ResponseEntity<FileResponse> uploadFiles(MultipartFile[] files, Long commitId);
 
-    Stream<Path> getAllFilesPaths();
+    Optional<File> getFileById(Long fileId);
 
-    Path loadFilePathByName(String filename);
+    Page<String> getFilesByCommitId(Long commitId, Pageable pageable);
 
-    Resource loadAsResource(String filename);
-
-    void deleteAll();
+    Page<String> getFilesOfLastAddedCommit(Long repositoryId, Pageable pageable);
 }

@@ -13,4 +13,6 @@ public interface RepositoryService {
     Optional<Repository> getRepositoryById(Long repositoryId);
 
     Page<Repository> getAllRepositories(Pageable pageable);
+
+    Optional<Repository> updateRepositorySize(Long repositoryId, Repository repositoryRequest);
 }

@@ -30,7 +30,12 @@ public class CommitController {
     }
 
     @GetMapping("/commit/{commitId}")
-    public Optional<Commit> getCommitById(@PathVariable (value = "commitId") Long commitId) {
+    public Optional<Commit> getCommitById(@PathVariable(value = "commitId") Long commitId) {
         return commitService.getCommitById(commitId);
+    }
+
+    @GetMapping("/commit/newest/{repositoryId}")
+    public Long getLastAddedCommitByRepositoryId(@PathVariable(value = "repositoryId") Long repositoryId) {
+        return commitService.findCommitIdByRepositoryId(repositoryId);
     }
 }
