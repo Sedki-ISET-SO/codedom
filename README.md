@@ -107,7 +107,8 @@ This section presents the most recent class diagram for Codedom app.
 
 This section lists any major frameworks/libraries used to bootstrap Codedom.
 
-* [FastAPI](https://fastapi.tiangolo.com/)
+* ~~[FastAPI](https://fastapi.tiangolo.com/)~~ <h6>FastAPI framework is still young, small community with poor documentation and guides, and managing big projects structure isn't optimal, especially imports management. Switched to Spring Boot.</h6>
+* [Spring Boot](https://spring.io/projects/spring-boot)
 * [Uvicorn](https://www.uvicorn.org/)
 * [PostgreSQL](https://www.postgresql.org/)
 * [Redis](https://redis.io/)
