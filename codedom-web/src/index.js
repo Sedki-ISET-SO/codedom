@@ -1,14 +1,22 @@
 import { ColorModeScript } from '@chakra-ui/react';
 import React, { StrictMode } from 'react';
 import ReactDOM from 'react-dom';
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import App from './App';
+import CharkaCreateRepositoryFrom from './pages/repository';
 import reportWebVitals from './reportWebVitals';
 import * as serviceWorker from './serviceWorker';
 
 ReactDOM.render(
   <StrictMode>
     <ColorModeScript />
-    <App />
+    <BrowserRouter>
+      <Routes>
+          <Route path="/" element={<App />} />
+          <Route path="create/repo" element={<CharkaCreateRepositoryFrom />}>
+          </Route>
+      </Routes>
+    </BrowserRouter>
   </StrictMode>,
   document.getElementById('root')
 );
