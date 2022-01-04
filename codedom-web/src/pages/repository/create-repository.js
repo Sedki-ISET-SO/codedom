@@ -109,9 +109,7 @@ export default function CreateRepositoryForm() {
                   Enter the name you'd like to reserve for your repository
                 </FormHelperText>
               ) : (
-                <FormErrorMessage>
-                  Repository name is required.
-                </FormErrorMessage>
+                <FormErrorMessage>Repository name is required!</FormErrorMessage>
               )}
             </Box>
           </FormControl>
@@ -144,7 +142,10 @@ export default function CreateRepositoryForm() {
                 colorScheme={'telegram'}
                 defaultChecked={false}
                 value={isSwitched}
-                onChange={() => {isSwitched = !isSwitched; repository.is_visible = isSwitched;}}
+                onChange={() => {
+                  isSwitched = !isSwitched;
+                  repository.is_visible = isSwitched;
+                }}
               />
             </Box>
           </FormControl>
@@ -152,10 +153,10 @@ export default function CreateRepositoryForm() {
           <Stack spacing={6}>
             <Button
               type="submit"
-              bg={'blue.400'}
+              bg={'blue.600'}
               color={'white'}
               _hover={{
-                bg: 'blue.500',
+                bg: 'blue.700',
               }}
               marginTop={4}
               isLoading={isSubmitted}

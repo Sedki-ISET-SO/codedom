@@ -6,6 +6,7 @@ import {
   theme,
 } from '@chakra-ui/react';
 import NavBar from './components/NavBar';
+import CodedomCallToAction from './pages/hero';
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
       <Box textAlign="top" fontSize="xl">
         <Grid minH="100vh" p={3}>
           <NavBar />
+          <CodedomCallToAction />
         </Grid>
       </Box>
     </ChakraProvider>

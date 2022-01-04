@@ -87,10 +87,10 @@ export default function NavBar() {
             fontSize={'sm'}
             fontWeight={600}
             color={'white'}
-            bg={'pink.400'}
+            bg={'purple.500'}
             href={'#'}
             _hover={{
-              bg: 'pink.300',
+              bg: 'purple.400',
             }}
           >
             Sign Up
@@ -295,6 +295,6 @@ const NAV_ITEMS = [
   },
   {
     label: 'Hire Designers',
-    href: '#',
+    href: '/',
   },
 ];
