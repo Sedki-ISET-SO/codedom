@@ -36,6 +36,7 @@ export default function CodedomCallToAction() {
           <Button
             rounded={'full'}
             px={6}
+            color={'white'}
             colorScheme={'purple'}
             bg={'purple.500'}
             _hover={{ bg: 'purple.600' }}

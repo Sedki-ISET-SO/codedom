@@ -4,6 +4,7 @@ import ReactDOM from 'react-dom';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import App from './App';
 import CharkaCreateRepositoryFrom from './pages/repository';
+import CharkaAllRepositories from './pages/repository/all-repositories';
 import reportWebVitals from './reportWebVitals';
 import * as serviceWorker from './serviceWorker';
 
@@ -14,6 +15,8 @@ ReactDOM.render(
       <Routes>
           <Route path="/" element={<App />} />
           <Route path="create/repo" element={<CharkaCreateRepositoryFrom />}>
+          </Route>
+          <Route path="/repos" element={<CharkaAllRepositories />}>
           </Route>
       </Routes>
     </BrowserRouter>

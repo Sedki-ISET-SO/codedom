@@ -1624,6 +1624,13 @@
   dependencies:
     "@chakra-ui/utils" "1.9.1"
 
+"@choc-ui/chakra-autocomplete@^4.15.0":
+  version "4.15.0"
+  resolved "https://registry.yarnpkg.com/@choc-ui/chakra-autocomplete/-/chakra-autocomplete-4.15.0.tgz#0752cf9173a74bc50be19a83f0d0e20c5d319403"
+  integrity sha512-pGY8CYDb+ej/P1/8Ukb1BuL7zsQCSLy1Je/bcgBw3GPYSmInz3JIsEbu5CaJka/qMZea1JymE1BRmXy6Jiz5YQ==
+  dependencies:
+    react-nanny "^2.9.0"
+
 "@csstools/normalize.css@*":
   version "12.0.0"
   resolved "https://registry.yarnpkg.com/@csstools/normalize.css/-/normalize.css-12.0.0.tgz#a9583a75c3f150667771f30b60d9f059473e62c4"
@@ -7896,6 +7903,11 @@ react-is@^17.0.1:
   version "17.0.2"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-17.0.2.tgz#e691d4a8e9c789365655539ab372762b0efb54f0"
   integrity sha512-w2GsyukL62IJnlaff/nRegPQR94C/XXamvMWmSHRJ4y7Ts/4ocGRmTHvOs8PSE6pB3dWOrD/nueuU5sduBsQ4w==
+
+react-nanny@^2.9.0:
+  version "2.11.0"
+  resolved "https://registry.yarnpkg.com/react-nanny/-/react-nanny-2.11.0.tgz#a88427d7d660d1bde70c998227aac52737008252"
+  integrity sha512-raJ0m0Z2ZY7Vi+WvLMDQhXqi1wOWyxQBr2xd2mIlgTutSgmyj9tKxzU459xebLjm3G1Xy6PMfzqqBcRXRvZCIg==
 
 react-refresh@^0.11.0:
   version "0.11.0"

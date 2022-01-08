@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Button,
   FormControl,
@@ -37,6 +38,8 @@ export default function CreateRepositoryForm() {
 
   let isSubmitted = false;
 
+  let navigate = useNavigate();
+
   function handleSubmit(event) {
     event.preventDefault();
 
@@ -48,12 +51,9 @@ export default function CreateRepositoryForm() {
         description: repository.description,
         is_visible: repository.is_visible,
       })
-      .then(response => {
-        console.log(response.data);
-      })
       .then(
         setTimeout(() => {
-          console.log('created successfully', repository);
+          navigate('/repos');
         }, 1000)
       )
       .catch(error => {
@@ -72,7 +72,7 @@ export default function CreateRepositoryForm() {
         spacing={4}
         w={'full'}
         maxW={'md'}
-        bg={useColorModeValue('white', 'gray.700')}
+        bg={useColorModeValue('white', 'gray.900')}
         rounded={'xl'}
         boxShadow={'lg'}
         p={6}
@@ -109,7 +109,9 @@ export default function CreateRepositoryForm() {
                   Enter the name you'd like to reserve for your repository
                 </FormHelperText>
               ) : (
-                <FormErrorMessage>Repository name is required!</FormErrorMessage>
+                <FormErrorMessage>
+                  Repository name is required!
+                </FormErrorMessage>
               )}
             </Box>
           </FormControl>
@@ -124,6 +126,7 @@ export default function CreateRepositoryForm() {
                 placeholder="Here is a sample placeholder"
                 name="description"
                 mt={2}
+                maxLength={180}
                 value={repository.description || ''}
                 onChange={onInputChange}
               />
@@ -153,11 +156,10 @@ export default function CreateRepositoryForm() {
           <Stack spacing={6}>
             <Button
               type="submit"
-              bg={'blue.600'}
+              colorScheme={'purple'}
               color={'white'}
-              _hover={{
-                bg: 'blue.700',
-              }}
+              bg={'purple.500'}
+              _hover={{ bg: 'purple.400' }}
               marginTop={4}
               isLoading={isSubmitted}
               loadingText="Submitting"
