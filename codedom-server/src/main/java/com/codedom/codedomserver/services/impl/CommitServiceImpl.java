@@ -40,9 +40,9 @@ public class CommitServiceImpl implements CommitService {
     }
 
     @Override
-    public Page<Commit> findByRepositoryId(Long repositoryId) {
-        Pageable firstPageWithTwoElements = PageRequest.of(0, 1);
-        return commitRepository.findByRepositoryId(repositoryId, firstPageWithTwoElements);
+    public Page<Commit> findByRepositoryId(Long repositoryId, Pageable pageable) {
+//        Pageable firstPageWithTwoElements = PageRequest.of(0, 1);
+        return commitRepository.findByRepositoryId(repositoryId, pageable);
     }
 
     @Override

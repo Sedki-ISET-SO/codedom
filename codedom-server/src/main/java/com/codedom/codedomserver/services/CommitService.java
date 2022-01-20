@@ -14,7 +14,7 @@ public interface CommitService {
 
     Page<Commit> getAllCommits(Pageable pageable);
 
-    Page<Commit> findByRepositoryId(Long repositoryId);
+    Page<Commit> findByRepositoryId(Long repositoryId, Pageable pageable);
 
     Long findCommitIdByRepositoryId(Long repositoryId);
 }

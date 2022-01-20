@@ -23,6 +23,12 @@ public class CommitController {
         return commitService.getAllCommits(pageable);
     }
 
+    @GetMapping("/commits/{repositoryId}")
+    public Page<Commit> getAllCommitsByRepositoryId(@PathVariable(value = "repositoryId") Long repositoryId,
+                                                    Pageable pageable) {
+        return commitService.findByRepositoryId(repositoryId, pageable);
+    }
+
     @PostMapping("/commit/{repositoryId}")
     public Optional<Commit> createNewCommit(@Valid @RequestBody Commit commit,
                                             @PathVariable(value = "repositoryId") Long repositoryId) {

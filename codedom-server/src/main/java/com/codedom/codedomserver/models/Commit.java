@@ -33,6 +33,7 @@ public class Commit extends AuditModel {
     private String message;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "commit")
+    @JsonIgnore
     private Set<File> files = new HashSet<>();
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

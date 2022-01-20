@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface FileRepository extends JpaRepository<File, Long> {
 
-    @Query("SELECT f.path FROM File f where f.commit.id = :commitId")
+    @Query("SELECT f.name, f.path, f.size FROM File f where f.commit.id = :commitId")
     Page<String> findFilesPathsById(@Param("commitId") Long commitId, Pageable pageable);
 
     @Query("SELECT f.size FROM File f where f.commit.id = :commitId")

@@ -1,10 +1,11 @@
 import { ColorModeScript } from '@chakra-ui/react';
 import React, { StrictMode } from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import App from './App';
 import CharkaCreateRepositoryFrom from './pages/repository';
 import CharkaAllRepositories from './pages/repository/all-repositories';
+import CharkaRepositoryDetails from './pages/repository/repository-details';
 import reportWebVitals from './reportWebVitals';
 import * as serviceWorker from './serviceWorker';
 
@@ -13,11 +14,13 @@ ReactDOM.render(
     <ColorModeScript />
     <BrowserRouter>
       <Routes>
-          <Route path="/" element={<App />} />
-          <Route path="create/repo" element={<CharkaCreateRepositoryFrom />}>
-          </Route>
-          <Route path="/repos" element={<CharkaAllRepositories />}>
-          </Route>
+        <Route path="/" element={<App />} />
+        <Route
+          path="create/repo"
+          element={<CharkaCreateRepositoryFrom />}
+        ></Route>
+        <Route path="/repos" element={<CharkaAllRepositories />}></Route>
+        <Route path="repos/:repoId" element={<CharkaRepositoryDetails />}></Route>
       </Routes>
     </BrowserRouter>
   </StrictMode>,
