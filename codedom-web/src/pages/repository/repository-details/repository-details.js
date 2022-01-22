@@ -1,8 +1,30 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import axiosInstance from '../../../utils/axiosConfig';
 
-import { Table, Thead, Tbody, Tfoot, Tr, Th, Td, Text } from '@chakra-ui/react';
+import {
+  Table,
+  Thead,
+  Tbody,
+  Tfoot,
+  Tr,
+  Th,
+  Td,
+  Text,
+  Button,
+  useDisclosure,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalCloseButton,
+  ModalBody,
+  FormControl,
+  FormLabel,
+  Input,
+  ModalFooter,
+  Stack,
+} from '@chakra-ui/react';
 
 export default function RepositoryDetails() {
   let repository = {
@@ -43,7 +65,7 @@ export default function RepositoryDetails() {
       .catch(error => {
         console.log(error);
       });
-  }, [repositoryDetails]);
+  }, [param.repoId]);
 
   useEffect(() => {
     axiosInstance
@@ -55,14 +77,69 @@ export default function RepositoryDetails() {
       .catch(error => {
         console.log(error);
       });
-  }, [repositoryCommits]);
+  }, [param.repoId]);
 
   useEffect(() => {
     axiosInstance.get(`/files/newest/${param.repoId}`).then(response => {
       console.log('Files: ', response.data);
       setLastCommitedFiles(response.data.content);
     });
-  }, [lastCommitedFiles]);
+  }, [param.repoId]);
+
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const initialRef = React.useRef();
+  const finalRef = React.useRef();
+
+  let initialCommitData = {
+    message: '',
+  };
+
+  const [commit, setCommit] = useState(initialCommitData);
+
+  function onInputChange(event) {
+    setCommit(prevState => {
+      return {
+        ...prevState,
+        message: event.target.value,
+      };
+    });
+    console.log('Commit Message Changed: ', commit);
+  }
+
+  const [commitId, setCommitId] = useState(null);
+
+  function changeCommitId(newCommitId) {
+    setCommitId(newCommitId);
+  }
+
+  useEffect(() => {
+    if (commitId > 0) {
+      console.log('New Commit Id: ', commitId);
+      navigate(`/repos/commit/${param.repoId}/${commitId}`);
+    }
+  }, [commitId]);
+
+  let navigate = useNavigate();
+
+  function handleSubmit(event) {
+    event.preventDefault();
+
+    if (commit.message && commit.message.length !== 0) {
+      axiosInstance
+        .post(`/commit/${param.repoId}`, {
+          message: commit.message,
+        })
+        .then(response => {
+          console.log('Commit Id: ', response.data.id);
+          let id = response.data.id;
+          changeCommitId(id);
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    }
+  }
 
   return (
     <section>
@@ -110,6 +187,55 @@ export default function RepositoryDetails() {
           </Tr>
         </Tfoot>
       </Table>
+
+      <Button onClick={onOpen} ml={5}>
+        Commit New Code
+      </Button>
+
+      <Modal
+        initialFocusRef={initialRef}
+        finalFocusRef={finalRef}
+        isOpen={isOpen}
+        onClose={onClose}
+      >
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>
+            A commit, is like a snapshot of your repository
+          </ModalHeader>
+          <ModalCloseButton />
+          <ModalBody pb={6}>
+            <form onSubmit={handleSubmit}>
+              <FormControl>
+                <FormLabel>Commit Message</FormLabel>
+                <Input
+                  ref={initialRef}
+                  defaultValue={commit.message}
+                  onChange={onInputChange}
+                  placeholder="Commit message"
+                />
+              </FormControl>
+
+              <Stack spacing={6}>
+                <Button
+                  type="submit"
+                  colorScheme={'purple'}
+                  color={'white'}
+                  bg={'purple.500'}
+                  _hover={{ bg: 'purple.400' }}
+                  marginTop={4}
+                  loadingText="Loading"
+                >
+                  Next
+                </Button>
+              </Stack>
+            </form>
+          </ModalBody>
+
+          <ModalFooter>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
 
       <Table variant="simple" mt={5}>
         <Thead>

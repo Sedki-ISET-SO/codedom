@@ -8,6 +8,7 @@ import CharkaAllRepositories from './pages/repository/all-repositories';
 import CharkaRepositoryDetails from './pages/repository/repository-details';
 import reportWebVitals from './reportWebVitals';
 import * as serviceWorker from './serviceWorker';
+import CharkaFilesUploadManager from './pages/repository/repository-details/files-upload-manager';
 
 ReactDOM.render(
   <StrictMode>
@@ -20,7 +21,14 @@ ReactDOM.render(
           element={<CharkaCreateRepositoryFrom />}
         ></Route>
         <Route path="/repos" element={<CharkaAllRepositories />}></Route>
-        <Route path="repos/:repoId" element={<CharkaRepositoryDetails />}></Route>
+        <Route
+          path="repos/:repoId"
+          element={<CharkaRepositoryDetails />}
+        ></Route>
+        <Route
+          path="repos/commit/:repoId/:commitId"
+          element={<CharkaFilesUploadManager />}
+        ></Route>
       </Routes>
     </BrowserRouter>
   </StrictMode>,

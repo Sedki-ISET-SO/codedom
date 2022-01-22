@@ -6,6 +6,7 @@ import com.codedom.codedomserver.services.FileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,7 +21,7 @@ public class FileController {
     @Autowired
     private FileService fileService;
 
-    @PostMapping("/file/{commitId}")
+    @PostMapping(value = "/file/{commitId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<FileResponse> createNewCommit(@RequestParam("files") MultipartFile[] files,
                                                         @PathVariable(value = "commitId") Long commitId) {
         return fileService.uploadFiles(files, commitId);
