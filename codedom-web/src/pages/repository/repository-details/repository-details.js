@@ -24,6 +24,7 @@ import {
   Input,
   ModalFooter,
   Stack,
+  Link,
 } from '@chakra-ui/react';
 
 export default function RepositoryDetails() {
@@ -141,6 +142,27 @@ export default function RepositoryDetails() {
     }
   }
 
+  const [downloadableLinks, setDownloadableLinks] = useState([]);
+
+  useEffect(() => {
+    axiosInstance
+      .get('/files/load/getFiles')
+      .then(response => {
+        console.log('Downloaded Files: ', response.data);
+        setDownloadableLinks(response.data);
+        console.log(downloadableLinks);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }, []);
+
+  useEffect(() => {
+    if (downloadableLinks !== undefined) {
+      console.log('New Downloadable Links : ', downloadableLinks);
+    }
+  }, [downloadableLinks]);
+
   return (
     <section>
       <Table variant="simple" mt={5}>
@@ -232,8 +254,7 @@ export default function RepositoryDetails() {
             </form>
           </ModalBody>
 
-          <ModalFooter>
-          </ModalFooter>
+          <ModalFooter></ModalFooter>
         </ModalContent>
       </Modal>
 
@@ -270,6 +291,7 @@ export default function RepositoryDetails() {
             <Th>Name</Th>
             <Th>Path</Th>
             <Th>Size</Th>
+            <Th>Download Link</Th>
           </Tr>
         </Thead>
         <Tbody>
@@ -279,6 +301,13 @@ export default function RepositoryDetails() {
                 <Td>{file[0]}</Td>
                 <Td>{file[1]}</Td>
                 <Td>{file[2]}</Td>
+                <Td>
+                  <Button>
+                    <Link href={downloadableLinks[index]} isExternal>
+                      Download
+                    </Link>
+                  </Button>
+                </Td>
               </Tr>
             ))}
         </Tbody>
@@ -287,6 +316,7 @@ export default function RepositoryDetails() {
             <Th>Name</Th>
             <Th>Path</Th>
             <Th>Size</Th>
+            <Th>Download Link</Th>
           </Tr>
         </Tfoot>
       </Table>

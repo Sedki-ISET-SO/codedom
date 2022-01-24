@@ -97,7 +97,7 @@ export default function AllRepositories() {
                 <chakra.h1 fontSize="xl" fontWeight="bold" color={h1Color}>
                   <Tooltip
                     label={
-                      repository.description.length > 0
+                      repository.description !== null
                         ? repository.description
                         : 'No Description Provided'
                     }
